@@ -27,15 +27,14 @@ public class StompController {
 	private StompService service;
 	
 	/**
-	 * 处理发往"/app/stompHS"目的地的消息，但不回传消息
+	 * 处理发往"/appli/stompHS"目的地的消息，但不回传消息
 	 * @param incoming
 	 * @return
 	 */
 	@MessageMapping("/stompHS")
 	public void handleShout(Shout incoming){
 		logger.info("收到的消息："+incoming.getMessage());
-		System.out.println("收到的消息："+incoming.getMessage());
-		
+		System.out.println("收到的消息："+incoming.getMessage());		
 	}
 	
 	/**

@@ -8,9 +8,6 @@
 	<div>
 		<a href="javascript:;" onclick="test()">任意地方都可以回复消息到指定主题，所有客户端收到</a>
 	</div>
-	<div>
-		<a href="javascript:;" onclick="test2()">任意地方都可以回复消息到指定主题，某个用户收到</a>
-	</div>
 </body>
 <!-- sockJS所对应的库 -->
 <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>  
@@ -54,7 +51,7 @@
 	}); */
 	
 	//连接服务器，此时的服务器可以在任何地方响应
-	/* stomp.connect("guest","guest",function(frame){
+	stomp.connect("guest","guest",function(frame){
 		//接收服务器的消息，浏览器想接收消息，必须订阅一个目的地
 		stomp.subscribe("/topic/feedback",function(message){
 			//解析JSON字符串
@@ -63,36 +60,16 @@
 		});
 	},function(error){
 		alert("stomp连接失败！");
-	});	  */
+	});
 	
-	/* function test(){
+	function test(){
 		$.ajax({
 			url:"/sendMsgAnyWhere",
 			type:"get",
 			dataType:"json",
 			success:function(e){}
 		});
-	} */
-	
-	
-	function test2(){
-		$.ajax({
-			url:"/sentMsgToUser",
-			type:"get",
-			data:{msg:"在市区你的风景里面，你却占据了每一条街@jaybill"},
-			dataType:"json",
-			success:function(e){}
-		});
 	}
-	stomp.connect("guest","guest",function(frame){
-		//接收服务器的消息，浏览器想接收消息，必须订阅一个目的地
-		stomp.subscribe("/user/jaybill/queue/notifications",function(message){
-			//解析JSON字符串
-			message = JSON.parse(message.body);
-			alert("收到的消息是:"+message);
-		});
-	},function(error){
-		alert("stomp连接失败！");
-	});	 
+	
 </script>
 </html>
