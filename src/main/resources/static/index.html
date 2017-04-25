@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<a href="javascript:;" onclick="test()">任意地方都可以回复消息到指定主题，所有客户端收到</a>
+	</div>
+	<div>
+		<a href="javascript:;" onclick="test2()">任意地方都可以回复消息到指定主题，某个用户收到</a>
+	</div>
+</body>
+<!-- sockJS所对应的库 -->
+<script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>  
+<script src="http://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script> 
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+
+<script type="text/javascript">
+	var url = 'http://'+window.location.host+'/myStomp';
+	var socket = new SockJS(url);
+	var stomp = Stomp.over(socket);
+	var payload = JSON.stringify({"message":"你好，我是浏览器!"});
+	
+	//只发送，收不到服务器的回应
+	/* stomp.connect("guest","guest",function(frame){
+		stomp.send("/appli/first/stompHS",{},payload);
+		alert("已经发送");
+	}); */
+	
+	//连接服务器，对应于@MessageMapping
+	/* stomp.connect("guest","guest",function(frame){
+		stomp.send("/appli/first/responseSTMP",{},payload);
+		//接收服务器的消息，浏览器想接收消息，必须订阅一个目的地
+		stomp.subscribe("/topic/shout",function(message){
+			//解析JSON字符串
+			message = JSON.parse(message.body);
+			alert("收到的消息是:"+message.message);
+		});
+	},function(error){
+		alert("stomp连接失败！");
+	});	  */
+	
+	//连接服务器，对应于订阅消息，@Subscribe
+	/* stomp.connect("guest","guest",function(frame){
+		stomp.subscribe("/appli/first/handleSubscribe",function(message){
+			message = JSON.parse(message.body);
+			alert("收到的消息是："+message.message);
+			console.log("收到的消息是："+message.message);
+		});
+	},function(error){
+		alert("stomp已经断开连接");
+	}); */
+	
+	//连接服务器，此时的服务器可以在任何地方响应
+	/* stomp.connect("guest","guest",function(frame){
+		//接收服务器的消息，浏览器想接收消息，必须订阅一个目的地
+		stomp.subscribe("/topic/feedback",function(message){
+			//解析JSON字符串
+			message = JSON.parse(message.body);
+			alert("收到的消息是:"+message);
+		});
+	},function(error){
+		alert("stomp连接失败！");
+	});	  */
+	
+	/* function test(){
+		$.ajax({
+			url:"/sendMsgAnyWhere",
+			type:"get",
+			dataType:"json",
+			success:function(e){}
+		});
+	} */
+	
+	
+	function test2(){
+		$.ajax({
+			url:"/sentMsgToUser",
+			type:"get",
+			data:{msg:"在市区你的风景里面，你却占据了每一条街@jaybill"},
+			dataType:"json",
+			success:function(e){}
+		});
+	}
+	stomp.connect("guest","guest",function(frame){
+		//接收服务器的消息，浏览器想接收消息，必须订阅一个目的地
+		stomp.subscribe("/user/jaybill/queue/notifications",function(message){
+			//解析JSON字符串
+			message = JSON.parse(message.body);
+			alert("收到的消息是:"+message);
+		});
+	},function(error){
+		alert("stomp连接失败！");
+	});	 
+</script>
+</html>
